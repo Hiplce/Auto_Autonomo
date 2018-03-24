@@ -11,23 +11,11 @@ float dist_der;
 float dist_del;
 float dist_tra;
 int velocidad;
-int luz = 130;
-#define f 6
-#define e 5
-#define g 11
-#define h 10
-#define p(a,b,c) analogWrite(a,c);analogWrite(b,c);
-#define l(z,x,y) digitalWrite(z,y);digitalWrite(x,y);
 void setup()
 {
   //pinMode(14, INPUT); 
   Serial.begin(9600);
-  pinMode(f,OUTPUT);
-  pinMode(e,OUTPUT);
-  pinMode(g,OUTPUT);
-  pinMode(h,OUTPUT);
   delay(1000);
-  p(f,e,luz);
 }
 void loop()
 {
@@ -35,22 +23,16 @@ void loop()
   if(dist_del > 100 || dist_del < 10)
   {
    vel(100); 
-   l(g,h,0);
-   p(f,e,luz);
   }
   else if(dist_del < 20)
   {
     vel(-3);
-    p(f,e,255);
-    l(g,h,1);
     //while(true){}
   }
   else
   {
-  velocidad = dist_del + 5;
+  velocidad = (dist_del - 20)*2.1 + 80; //segun la distancia que detecte avanzará con cierta 
   vel(velocidad);
-  p(f,e,luz);
-  l(g,h,0);
   delay(700);
   }
 }
@@ -121,6 +103,10 @@ void d_prom()
   {
     dist_t += dist_del + dist_der;
     cont += 2;
+  }
+  else
+  {
+    i--;
   }
   }
   dist_del = dist_t/cont;
