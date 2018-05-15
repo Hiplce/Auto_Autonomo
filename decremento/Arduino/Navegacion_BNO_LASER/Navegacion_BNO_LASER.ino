@@ -59,11 +59,11 @@ void dist_45(int i) // para cuando el laser detecta menos de 45cm
   int pa = pos;
   if (i <= 2 || i >= 8)
   {
-    while (tiempo < 45 && pa > 0) //cambiar la condicion por la lectura del sensor??
+    while (tiempo < 45 && pa > 0) //cambiar la condicion por la lectura del sensor?? estamos actualizando la variable de la distancia es decir es lo mismo que poner la condicion de lectura 
     {
       //printf("se rompio aca1\n");
       //printf("posicion actual: %d\n",pa);
-      tiempo = pulseIn(3, HIGH);
+      tiempo = pulseIn(3, HIGH)/100; //le agregue esto asi en tiempo nos actualiza la distancia
       pa--;
       serd.write(pa);
     }
@@ -71,10 +71,10 @@ void dist_45(int i) // para cuando el laser detecta menos de 45cm
   }
   else
   {
-    while (tiempo < 42 && pa < 180) { //lo mismo aca??
+    while (tiempo < 45 && pa < 180) { //lo mismo aca??
       // printf("se rompio aca2\n");    //la direccion se mueve a la izquierda
       // printf("posicion actual: %d\n",pa);
-      tiempo = pulseIn(3, HIGH);
+      tiempo = pulseIn(3, HIGH)/100;
       pa++;
       serd.write(pa);
     }
