@@ -12,10 +12,9 @@ Serial pc(USBTX,USBRX);
 
 Timer t;
 
-float radio;
+float radio; // falta radio de la rueda
 float largor = PI*radio^2;
-int cantpulsos;// aca hay que poner la cantidad de pulsos (pasadas del iman por hall ) hasta dar vuelta completa a la rueda
-
+float cantpulsos = 2.5;// aca hay que poner la cantidad de pulsos (pasadas del iman por hall ) hasta dar vuelta completa a la rueda
 float velocidad (){
       t.start();
       if(hall == 1 ){
