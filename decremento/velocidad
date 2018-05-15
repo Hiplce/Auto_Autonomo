@@ -1,0 +1,40 @@
+#include "mbed.h"
+#include "math.h"
+
+#define PI 3.14159265358979323846 /* pi */
+
+PwmOut pwm1(PTD3);
+PwmOut pwm2(PTA2);
+
+DigitalIn hall(PTB9);
+DigitalOut led(LED1);
+Serial pc(USBTX,USBRX);
+
+Timer t;
+
+float radio;
+float largor = PI*radio^2;
+int cantpulsos;// aca hay que poner la cantidad de pulsos (pasadas del iman por hall ) hasta dar vuelta completa a la rueda
+
+float velocidad (){
+      t.start();
+      if(hall == 1 ){
+        t.stop();
+        tiempo = t.read();
+      }
+      tt = tiempo*cantpulsos;
+      return largor/tt;
+}
+
+int main()
+{
+    float vel;
+    if(hall == 1){
+
+      vel = velocidad();
+    }
+
+    }
+
+
+}
