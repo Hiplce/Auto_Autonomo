@@ -37,7 +37,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 int pos_servo(int angle)
 {
-  int pos;
+  int pos=90;
   if (angle > 180 && angle < 360)
   {
     pos -= (angle - 360) * 3.5; /////DERECHA
@@ -48,7 +48,7 @@ int pos_servo(int angle)
     pos -= (angle) * 3.5; ////IZQUIERDA
     servo.write(pos);
   }
-  //Serial.println(pos);
+  Serial.println(pos);
 }
 /**************************************************************************/
 /*
