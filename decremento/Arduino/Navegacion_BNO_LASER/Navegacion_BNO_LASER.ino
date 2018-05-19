@@ -32,17 +32,18 @@ void setup() {
   bno.setExtCrystalUse(true);
   bno_055(1);
   delay(500);
+ 
 }
 
 void loop() {
   int distl1; //
-  int pos[11] = {180, 150, 120, 60, 30, 0, 30, 60, 120, 150, 180}; // lo pongo asi para hacer un solo for
-  int distl[11];
+  int pos[10] = {180, 150, 120, 60, 30, 10, 30, 60, 120, 150}; // lo pongo asi para hacer un solo for
+  int distl[10];
   bno_055(3.5);
-  for (int i = 0; i <= 10; i++) {
+  for (int i = 0; i <= 9; i++) {
     sl1.write(pos[i]);
     //sl1.write(90);
-    delay(300); //////////////////////////////////////////////////////////////¡¡¡¡¡¡¡ ver el tiempo que TARDA en tomar la medida !!!!!!!!////////////////////////////////////////////////////////
+    delay(200); //////////////////////////////////////////////////////////////¡¡¡¡¡¡¡ ver el tiempo que TARDA en tomar la medida !!!!!!!!////////////////////////////////////////////////////////
     tiempo = pulseIn(3, HIGH) / 100;
     distl[i] = tiempo;      //guardado de las 6 lecturas de izq. a der.
     //Serial.print(i);
