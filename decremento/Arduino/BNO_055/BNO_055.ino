@@ -40,12 +40,12 @@ int pos_servo(int angle)
   int pos=90;
   if (angle > 180 && angle < 360)
   {
-    pos -= (angle - 360) * 3.5; /////DERECHA
+    pos -= (angle - 360) * 2; /////DERECHA
     servo.write(pos);
   }
   else
   {
-    pos -= (angle) * 3.5; ////IZQUIERDA
+    pos -= (angle) * 2; ////IZQUIERDA
     servo.write(pos);
   }
   Serial.println(pos);
