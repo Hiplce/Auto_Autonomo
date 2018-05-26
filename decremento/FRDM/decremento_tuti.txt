@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "PwmIn.h"
+//#include "PwmIn.h"
 #include "SoftwarePWM.h"
 #include "Servo.h"
 // main de los main
@@ -13,21 +13,13 @@ PwmOut pwm(PTC3);        //pwm motor
 DigitalOut pina(D0);     //pin direccion
 DigitalOut pinb(D1);     //pin direccion
 
-//Direccion
-Servo serd (PTD0);
-
-
 //Ultrasonido
 DigitalOut URTRIG(PTD1);          // A low pull on pin COMP/TRIG
 InterruptIn event(PTD3);
 Timer timer;
 int begin, end;
 unsigned int dist = 0;
-const float razon = 0.3f;
-
-//ToF
-PwmIn l1 (PTC10); // laser
-Servo sl1 (PTC2); // servo de laser
+//const float razon = 0.3f;
 
 void PWM_rise()                  //invocado por PWM_Mode para medicion de ultrasonido
 {
@@ -59,110 +51,72 @@ void vel(float pot)                    //controlar motor mediante pin (pwm, pina
         pina = 1;
         pinb = 0;
 
-        pwm = pot;
+        pwm = pot*0.01;
     } else {
         pina = 0;
         pinb = 1;
-        pwm = abs(pot);
+        pwm = abs(pot)*0.01;
+    }
+}
+
+void curva(float partes, int tiempo, float vel_max)
+{
+    for(int i=1; i <= partes; i++)
+    {
+        vel((vel_max/partes)*i);
+        wait_ms(tiempo);   
     }
 }
 
 int main()
 {
-    serd.setLimits(500,2400);               //se setea rango de servo
-    serd.enable(0);          //se setea la primera posicion del servo
-    wait(0.2f);
-    sl1.setLimits(500,2400);                //se setea rango de servo
-    sl1.enable(-20);         //se setea la primera posicion del servo
-    int posIni = 0;   //servo
     pwm.period_ms(5);       //periodo del pwm del motor
-    int pos[6] = {-90,-60,-30,30,60,90};      //posiciones de medicion de sensor laser
-    float distl[6] = {0,0,0,0,0,0};      //arreglo para guardar las seis medidas obtenidas por el sensor laser
-    int pa;     //posicion actual servo
+    
+    curva(15,400,50);
+    wait_ms(300);
+    vel(0);
+    while(1){}
     while(1) {
         event.fall(&PWM_Mode);    //linea 47
-        PWM_Mode();       //no borrar por ningun motivo, aunqu esté bien fundamentado
+        PWM_Mode();       //no borrar por ningun motivo, aunque esté bien fundamentado
         printf("distancia:  %d\n",dist);
 
 ////////////////////////////////////////////////   DECREMENTO
-        if(dist >= 100 || dist == 0) {
-            vel(0.3);
+        if(dist >= 150 || dist == 0) {
+            vel(1);
             printf("adelante    %d\n", dist);
         } else if(dist < 20) {
             printf("atras    %d\n", dist);
             vel(-0.2);
-            wait(0.4);
+            wait(0.1);
             vel(0);
-        } else {
-            printf("tranqui     pwm: %f         dist: %d\n\r",(dist*razon/100),dist);
+            wait(1);
+            /*while(dist < 20 && dist != 0)
+            {
+                event.fall(&PWM_Mode);    //linea 47
+                PWM_Mode();       //no borrar por ningun motivo, aunque esté bien fundamentado
+            }*/
+        } 
+        else {
+            if(dist < 150 && dist > 110)
+            {
+                vel(((dist-62)/2.37)); 
+                printf("reg:    %d    vel:  %f\n\r",dist,((dist-62)/2.37)*0.01);
+            }
+            else
+            {
+                vel(((dist-20)/4.5));
+                printf("reg:    %d    vel:  %f\n\r",dist,((dist-20)/4.5)*0.01);
+            }
 
-            vel(dist*razon/100);
+            //printf("reg:    %d    vel:  %f\n\r",(dist,);
+
+            //vel(dist*razon/100);
             //  printf("%.2f cm \n", dist);
         }
 //////////////////////////////////////////////// FIN DECREMENTO
 
-//////////////////////////////////////////////// NAVEGACION
-        /*for(int i = 0; i<6; i++) {
-            sl1.write(pos[i]);
-            wait(0.150);
-            distl[i] = l1.pulsewidth()*10000;        //guardado de las 6 lecturas de izq. a der.
-            printf("posicion %d : %.2f\n",i,distl[i]);
-            if (distl[i] < 45) {
-                if(i<2) {
-                    pa = posIni;
-                    while((l1.pulsewidth()*10000)<42 && pa>-90) {   //la direccion se mueve hacia la derecha
-                        //printf("se rompio aca1\n");
-                        printf("posicion actual: %d\n",pa);
-                        pa--;
-                        serd.write(pa);
 
-
-                    }
-                    serd.write(posIni);
-                } else {
-                    pa = posIni;
-                    while((l1.pulsewidth()*10000)<42 && pa<90) {
-                        // printf("se rompio aca2\n");    //la direccion se mueve a la izquierda
-                        printf("posicion actual: %d\n",pa);
-                        pa++;
-                        serd.write(pa);
-
-                    }
-                    serd.write(posIni);
-                }
-            }
-        }
-        for(int i = 5; i>=0; i--) {
-            sl1.write(pos[i]);
-            wait(0.150);
-            distl[i] = l1.pulsewidth()*10000;    // guardado de las 6 lecturas de der. a izq.
-            printf("posicion %d : %.2f\n",i,distl[i]);
-            if (distl[i] < 45) {
-                if(i<2) {
-                    pa = posIni;
-                    while((l1.pulsewidth()*10000)<42 && pa>-90 ){   //la direccion se mueve hacia la derecha
-                        //printf("se rompio aca1\n");
-                        printf("posicion actual: %d\n",pa);
-                        pa--;
-                        serd.write(pa);
-
-
-                    }
-                    serd.write(posIni);
-                } else {
-                    pa = posIni;
-                    while((l1.pulsewidth()*10000)<42 && pa < 90) {
-                        // printf("se rompio aca2\n");    //la direccion se mueve a la izquierda
-                        printf("posicion actual: %d\n",pa);
-                        pa++;
-                        serd.write(pa);
-
-                    }
-                    serd.write(posIni);
-                }
-            }
-        }*/
-/////////////////////////////////////////////////// FIN NAVEGACION
         wait_ms(20);
     }
 }
