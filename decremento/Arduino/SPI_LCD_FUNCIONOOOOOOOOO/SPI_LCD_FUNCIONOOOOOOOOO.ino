@@ -4,20 +4,20 @@
 
 /////DATOS
 
-5 pulsos por vuelta de rueda
-diametro = 7,7 cm
-radio = 3,35 cm
-perimetro rueda = 24,19cm
-1 vuelta --> 5 pulsos
-5 ciclos / 1 segundo = 5Hz
-1 vuelta --> 1 segundo
-24,19 cm / 1 seg
-// Connect via SPI. Data pin is #3, Clock is #2 and Latch is #4
-LiquidCrystal lcd(3, 2, 4);
+//5 pulsos por vuelta de rueda
+//diametro = 7,7 cm
+//radio = 3,35 cm
+//perimetro rueda = 24,19cm
+//1 vuelta --> 5 pulsos
+//5 ciclos / 1 segundo = 5Hz
+//1 vuelta --> 1 segundo
+//24,19 cm / 1 seg
+// Connect via SPI. Data pin is #11, Clock is #13 and Latch is #10
+LiquidCrystal lcd(11, 13, 10);
 unsigned long tiempo;
 float reset = 0;
 String b1, b2, v;
-boolean bat = true;
+int bat = -1;
 void setup() {
   Serial.begin(9600);
   pinMode(14, INPUT);
@@ -52,7 +52,7 @@ void loop() {
     }
     reset = millis();
   }
-  Serial.print(b1);
+  Serial.print((100.0-((4.6-((analogRead(15)/1039.0)*5.0))*250.0)));
   Serial.print("\t");
   Serial.print(b2);
   Serial.println();
@@ -63,9 +63,9 @@ void loop() {
   // print the number of seconds since reset:
   //lcd.print(millis()/1000);
 }
-void imp_lcd(String palabra, int x, int y)
+void imp_lcd(String palabra, int x, int y)//solo tengo que imprimir 3 posiciones
 {
-  for (int i = 0; i < 4; i++)
+  for (int i = 3; i >= 0; i--)
   {
     lcd.setCursor(i + x, y);
     lcd.print(palabra[i]);
