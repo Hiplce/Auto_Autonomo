@@ -50,7 +50,6 @@ void vel(float pot)                    //controlar motor mediante pin (pwm, pina
     if(pot >= 0) {
         pina = 1;
         pinb = 0;
-
         pwm = pot*0.01;
     } else {
         pina = 0;

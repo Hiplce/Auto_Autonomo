@@ -25,10 +25,10 @@ void setup() {
 
   serd.attach(6); // servo de direccion
   sl1.attach(9); // servo de laser
-
+ 
   //inicialización de servos
   serd.write(90);
-  sl1.write(180);
+  sl1.write(125);
 
   //declaración de pines LCD
   pinMode(14, INPUT);
@@ -54,9 +54,9 @@ void setup() {
 
 void loop() {
   t = millis();
-  int distl1; //
-  int pos[10] = {180, 150, 120, 60, 30, 10, 30, 60, 120, 150}; // lo pongo asi para hacer un solo for
-  int distl[10];
+  int distl1;
+  int post[6] = {125, 110, 100, 85, 100, 110}; // lo pongo asi para hacer un solo for
+  int distl[6];
   bno_055(3.5);
   //////////////////////////////Impresión LCD
   if ((t - reset) < 1500)
@@ -87,8 +87,8 @@ void loop() {
   /////////////////////////////Fin Impresión LCD
   
   /////////////////////////////Comienzo Navegación
-  for (int i = 0; i <= 9; i++) {
-    sl1.write(pos[i]);
+  for (int i = 0; i <= 5; i++) {
+    sl1.write(post[i]);
     //sl1.write(90);
     delay(200);
     tiempo = pulseIn(3, HIGH) / 100;
@@ -98,41 +98,39 @@ void loop() {
     //Serial.println(distl[i]);
     //Serial.println();
     bno_055(3.5);
-    if (distl[i] < 45)
+    if (distl[i] < 40)
     {
-      dist_45(i);
+      dist_40(i);
     }
   }
   ////////////////////////////Fin Navegación
 }
-void dist_45(int i) // para cuando el laser detecta menos de 45cm
+void dist_40(int i) // para cuando el laser detecta menos de 45cm
 {
-  int pa = pos;
-  if (i <= 2 || i >= 8)
+  if (i <= 1 || i == 5)
   {
-    while (tiempo < 45 && pa > 20) //cambiar la condicion por la lectura del sensor??
+    while (tiempo < 40) //cambiar la condicion por la lectura del sensor??
     {
       //printf("se rompio aca1\n");
       //printf("posicion actual: %d\n",pa);
       tiempo = pulseIn(3, HIGH) / 100;
-      pa--;
-      serd.write(pa);
+      serd.write(20);
     }
     serd.write(pos);
   }
   else
   {
-    while (tiempo < 45 && pa < 160) { //lo mismo aca??
+    while (tiempo < 40) { //lo mismo aca??
       // printf("se rompio aca2\n");    //la direccion se mueve a la izquierda
       // printf("posicion actual: %d\n",pa);
       tiempo = pulseIn(3, HIGH) / 100;
-      pa++;
-      serd.write(pa);
+      serd.write(140);
     }
     serd.write(pos);
   }
   bno_055(3.5);
 }
+
 void bno_055(float multiplicador)//función para corregir con bno
 {
   pos = 90;
@@ -142,18 +140,39 @@ void bno_055(float multiplicador)//función para corregir con bno
   int angle = event.orientation.x;
   Serial.print(angle);
   Serial.print("\t");
-  if (angle > 180 && angle < 360)
+  if (angle > 180 && angle < 358)
   {
-    pos -= (angle - 360) * 3.5; /////DERECHA
-    serd.write(pos);
+    pos -= (angle - 360) * 2.5; /////DERECHA
+    if (pos > 165)//si se pasan los 165 grados la rueda se traba con la estructura
+    {
+      serd.write(165);
+      //Serial.print("lim  ");
+    }
+    else
+    {
+      serd.write(pos);
+    }
+  }
+  else if (angle > 0 && angle <= 180)
+  {
+    pos -= (angle) * 2.5; ////IZQUIERDA
+    if (pos < 20)//si se pasan los 20 grados la rueda se traba con la estructura
+    {
+      serd.write(20);
+      //Serial.print("lim  ");
+    }
+    else
+    {
+      serd.write(pos);
+    }
   }
   else
   {
-    pos -= angle * 3.5; ////IZQUIERDA
     serd.write(pos);
   }
-  Serial.println(pos);
+  //Serial.println(pos);
 }
+
 void imp_lcd(String palabra, int x, int y)//función para imprimir por LCD
 {
   for (int i = 0; i < 4; i++)
