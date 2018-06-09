@@ -37,15 +37,35 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 int pos_servo(int angle)
 {
-  int pos=90;
-  if (angle > 180 && angle < 360)
+  int pos = 90;
+  if (angle > 180 && angle < 358)
   {
-    pos -= (angle - 360) * 2; /////DERECHA
-    servo.write(pos);
+    pos -= (angle - 360) * 3.2; /////DERECHA
+    if (pos > 165)
+    {
+      servo.write(165);
+      Serial.print("lim  ");
+    }
+    else
+    {
+      servo.write(pos);
+    }
+  }
+  else if (angle > 0 && angle <= 180)
+  {
+    pos -= (angle) * 3.2; ////IZQUIERDA
+    if (pos < 20)
+    {
+      servo.write(20);
+      Serial.print("lim  ");
+    }
+    else
+    {
+      servo.write(pos);
+    }
   }
   else
   {
-    pos -= (angle) * 2; ////IZQUIERDA
     servo.write(pos);
   }
   Serial.println(pos);
@@ -136,7 +156,24 @@ void displayCalStatus(void)
 void setup(void)
 {
   servo.attach(6);
-  servo.write(90);
+  //el servo de la direccion va desde 20 a 165
+  int i = 100, b = 10;
+  while (i != 90)
+  {
+    servo.write(i);
+    delay(30);
+    servo.write(i - b);
+    delay(30);
+    i--;
+    b--;
+  }
+  /*servo.write(100);
+    delay(500);
+    servo.write(80);
+    delay(50);
+    servo.write(90);
+    delay(30);
+  */
   Serial.begin(9600);
   Serial.println("Orientation Sensor Test"); Serial.println("");
 
