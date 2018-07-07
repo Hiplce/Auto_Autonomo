@@ -63,21 +63,21 @@ void curva(float partes, int tiempo, float vel_max)
     for(int i=1; i <= partes; i++)
     {
         vel((vel_max/partes)*i);
-        wait_ms(tiempo);   
+        wait_ms(tiempo);
     }
 }
 
 int main()
 {
     pwm.period_ms(5);       //periodo del pwm del motor
-    
+
     curva(15,400,50);
     wait_ms(300);
     vel(0);
     while(1){}
     while(1) {
         event.fall(&PWM_Mode);    //linea 47
-        PWM_Mode();       //no borrar por ningun motivo, aunque esté bien fundamentado
+        PWM_Mode();       //no borrar por ningun motivo, aunque este bien fundamentado
         printf("distancia:  %d\n",dist);
 
 ////////////////////////////////////////////////   DECREMENTO
@@ -93,13 +93,13 @@ int main()
             /*while(dist < 20 && dist != 0)
             {
                 event.fall(&PWM_Mode);    //linea 47
-                PWM_Mode();       //no borrar por ningun motivo, aunque esté bien fundamentado
+                PWM_Mode();       //no borrar por ningun motivo, aunque estï¿½ bien fundamentado
             }*/
-        } 
+        }
         else {
             if(dist < 150 && dist > 110)
             {
-                vel(((dist-62)/2.37)); 
+                vel(((dist-62)/2.37));
                 printf("reg:    %d    vel:  %f\n\r",dist,((dist-62)/2.37)*0.01);
             }
             else
