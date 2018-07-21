@@ -28,6 +28,7 @@ void setup() {
  
   //inicialización de servos
   serd.write(90);
+  delay(5000);
   sl1.write(125);
 
   //declaración de pines LCD
@@ -49,7 +50,6 @@ void setup() {
   bno.setExtCrystalUse(true);
   bno_055(1);
   delay(500);
-
 }
 
 void loop() {
@@ -116,6 +116,8 @@ void dist_40(int i) // para cuando el laser detecta menos de 45cm
       tiempo = pulseIn(3, HIGH) / 100;
       serd.write(20);
     }
+    serd.write(pos-30);
+    delay(20);
     serd.write(pos);
   }
   else
@@ -126,6 +128,8 @@ void dist_40(int i) // para cuando el laser detecta menos de 45cm
       tiempo = pulseIn(3, HIGH) / 100;
       serd.write(140);
     }
+    serd.write(pos+30);
+    delay(20);
     serd.write(pos);
   }
   bno_055(3.5);

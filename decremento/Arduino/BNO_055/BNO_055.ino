@@ -156,6 +156,10 @@ void displayCalStatus(void)
 void setup(void)
 {
   servo.attach(6);
+  servo.write(180);
+  delay(700);
+  servo.write(90);
+  delay(9000);
   //el servo de la direccion va desde 20 a 165
   int i = 100, b = 10;
   while (i != 90)
