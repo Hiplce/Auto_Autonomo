@@ -13,7 +13,11 @@ const float e = 2.71828182845904;//valor de exponencial
 bool menor20 = true;
 //DigitalOut led(LED1);
 DigitalOut led1(LED2);
-
+// variables globales de tx
+char dire_tx[8];
+float vel_tx=0.0;
+float pot_tx=0.0;
+int dist_tx=0;
 //Motor
 PwmOut pwm(PTC3);        //pwm motor
 DigitalOut pina(D0);     //pin direccion
@@ -80,7 +84,15 @@ void curva(float partes, int tiempo, float vel_max)
       wait_ms(tiempo);
     }
 }
-
+void tx_datos()
+{
+  Xbee.printf("*******Datos*******\r\n");  
+  Xbee.printf("Velocidad: %d\r\n");
+  Xbee.printf("Potencia motor:%f.3\r\n");
+  Xbee.printf("Distancia: %f.3\r\n");
+  Xbee.printf("Direccion: %s\r\n);
+  Xbee.printf("********************\r\n");
+    
 int main()
 {
 ////// inicializacion del xbee
