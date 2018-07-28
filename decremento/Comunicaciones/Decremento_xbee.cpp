@@ -1,9 +1,3 @@
-while(1){
-        Xbee.printf("funcionando\r\n");
-        //char a = 's';
-        //Xbee.putc(a);
-        
-        wait(0.5); // este wait es solo para que NO se solapen los datos. no es preciso para enviar grandes cantidades de d
 #include "mbed.h"
 #include "SoftwarePWM.h"
 #include "Servo.h"
@@ -13,7 +7,6 @@ while(1){
 Serial pc(USBTX,USBRX);
 DigitalOut rst1(PTB18);
 Serial Xbee(PTC17,PTC16);
-//Serial pc(USBTX,USBRX);
 //ultrasonido
 HCSR04 ultra(PTD3,PTD1);
 const float e = 2.71828182845904;//valor de exponencial
@@ -91,9 +84,9 @@ void curva(float partes, int tiempo, float vel_max)
 int main()
 {
 ////// inicializacion del xbee
-Xbee.baud(9600);
-    rst1 = 0; //Set reset pin to 0
-   wait_ms(1);//Wait at least one millisecond
+ Xbee.baud(9600);
+ rst1 = 0; //Set reset pin to 0
+ wait_ms(1);//Wait at least one millisecond
     rst1 = 1;//Set reset pin to 1
     wait_ms(1);//Wait another millisecond
   led1 = 1;
