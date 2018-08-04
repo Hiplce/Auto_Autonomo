@@ -1,7 +1,7 @@
 //Code for Arduino attached to Xbee in Coordinator AT mode
 // codigo para la recepcion del dispositivo Xbee.
 // Se recibe el dato serial del equipo Xbee y se transmite en Bluetooth por HC06
-int a=10;
+int a=20;
 
 void setup(){
   Serial1.begin(9600);// serial destinado al receptor Xbee
@@ -14,6 +14,7 @@ void loop(){
   //if (Serial1.available()>0){ // si llego un dato por el puerto serial de RX de XBee
     //Serial.write(Serial1.read());
     //Serial1.read();
-    Serial1.write("%d",a); // lo re transmito por BT
+    Serial1.write(a); // lo re transmito por BT
+    delay(500);
   //}
 }
