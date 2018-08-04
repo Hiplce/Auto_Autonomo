@@ -13,18 +13,21 @@ int main()
 {
     Xbee.baud(9600);
     Blue.baud(115200);
-    rst1 = 0; //Set reset pin to 0
+  /*  rst1 = 0; //Set reset pin to 0
     wait_ms(1);//Wait at least one millisecond
     rst1 = 1;//Set reset pin to 1
-    wait_ms(1);//Wait another millisecond
+    wait_ms(1);//Wait another millisecond*/
     while(1){
-        
+
         Blue.printf("Recibiendo\r\n");
-        Blue.printf(byterecibido+"\n");
+        receivedByte();
+        printf("%d\n",byterecibido );
+        Blue.printf("%d \n",byterecibido);
+        wait(0.5);
         //char a = 's';
         //Xbee.putc(a);
-        
+
         //wait(0.5); // este wait es solo para que NO se solapen los datos. no es preciso para enviar grandes cantidades de datos
-        
+
   }
 }
