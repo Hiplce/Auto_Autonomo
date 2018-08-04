@@ -1,0 +1,30 @@
+#include "mbed.h"
+#include "Serial.h"
+
+DigitalOut rst1(PTB18);
+Serial Xbee(PTC17,PTC16); //TX-RX
+Serial Blue(PTC4,PTC3); // TX-RX
+int byterecibido=0;
+void receivedByte()   // funcion que atiende la interrupcion
+{
+ byterecibido=Xbee.getc();
+ }
+int main()
+{
+    Xbee.baud(9600);
+    Blue.baud(115200);
+    rst1 = 0; //Set reset pin to 0
+    wait_ms(1);//Wait at least one millisecond
+    rst1 = 1;//Set reset pin to 1
+    wait_ms(1);//Wait another millisecond
+    while(1){
+        
+        Blue.printf("Recibiendo\r\n");
+        Blue.printf(byterecibido+"\n");
+        //char a = 's';
+        //Xbee.putc(a);
+        
+        //wait(0.5); // este wait es solo para que NO se solapen los datos. no es preciso para enviar grandes cantidades de datos
+        
+  }
+}
